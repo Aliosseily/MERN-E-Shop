@@ -30,7 +30,7 @@ router.post(`/`, (req, res) => {
         image: req.body.image,
         countInStick: req.body.countInStick,
     })
-    product.save().then((createdProduct) => {
+    product.save().then((createdProduct) => { // you can use async await instead
         res.status(201).json(createdProduct);
     }).catch((err) => {
         res.status(500).json({

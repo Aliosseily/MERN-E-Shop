@@ -5,20 +5,26 @@ const mongoose = require('mongoose');//mongoose is responsible for all operation
 const cors = require('cors')
 require('dotenv/config') // npm install --save dotenv yo add variables that will be used globally in all files inside the app
 
+app.use(cors()); // enable cors
+app.options('*',cors()); // allow every thing to use this cors, allow all http requests (GET, POST, DELETE, PUT) to be passed from any other origin 
 
 const api = process.env.API_URL; // target the API_URL defined inside .env file
 
-const productsRouter = require('./routers/products')
-
-app.use(cors()); // enable cors
-app.options('*',cors()); // allow every thing to use this cors, allow all http requests (GET, POST, DELETE, PUT) to be passed from any other origin 
+// Routes
+const categoriesRoutes = require("./routes/categories");
+const productsRoutes = require("./routes/products");
+const usersRoutes = require("./routes/users");
+const ordersRoutes = require("./routes/orders");
 
 // middleware
 app.use(express.json()); // this is called middleware, express will accept json data, this method allow our data to be understandable by express , which we are sent from front end
 app.use(morgan('tiny')); // this is library morgan npm install morgan used to log http requests in the console 
 
-// Routers middleware
-app.use(`${api}/products`, productsRouter)
+// Routes middleware
+app.use(`${api}/categories`, categoriesRoutes);
+app.use(`${api}/products`, productsRoutes);
+app.use(`${api}/users`, usersRoutes);
+app.use(`${api}/orders`, ordersRoutes);
 
 // add mongoose connection before starting the server 
 mongoose.connect(process.env.CONNECTION_STRING, {
