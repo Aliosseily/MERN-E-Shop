@@ -5,21 +5,15 @@ const mongoose = require("mongoose");//mongoose is responsible for all operation
 
 require('dotenv/config') // npm install --save dotenv yo add variables that will be used globally in all files inside the app
 const api = process.env.API_URL; // target the API_URL defined inside .env file
+
+const productsRouter = require('./routers/products')
+
+// middleware
 app.use(express.json()); // this is called middleware, express will accept json data, this method allow our data to be understandable by express , which we are sent from front end
 app.use(morgan('tiny')); // this is library morgan npm install morgan used to log http requests in the console 
-app.get(`${api}/products`, (req, res) => {
-    const product = {
-        id: 1,
-        name: 'product 1',
-        image: "Some image"
-    }
-    res.send(product)
-})
-app.post(`${api}/products`, (req, res) => {
-    const newProduct = req.body;
-    console.log("newProduct", newProduct)
-    res.send(newProduct)
-})
+
+// Routers middleware
+app.use(`${api}/products`, productsRouter)
 
 // add mongoose connection before starting the server 
 mongoose.connect(process.env.CONNECTION_STRING, {
