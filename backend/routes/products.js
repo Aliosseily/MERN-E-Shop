@@ -23,10 +23,19 @@ const router = express.Router(); // this router is only responsible for creating
 router.get(`/`, async (req, res) => {
     // we should wait the database to send us the response then we send it to frontend
     const productsList = await Product.find();
+    //const productsList = await Product.find().select('name image -_id'); // return only the selected data from array instead of the whole array
     if (!productsList) { // in case of error
         res.status(500).json({ success: false })
     }
     res.send(productsList);
+})
+
+router.get(`/:id`, async (req, res) => {
+    const product = await Product.findById(req.params.id);
+    if (!product) { 
+        res.status(500).json({ success: false })
+    }
+    res.send(product);
 })
 
 // replace app.post with router.post and ${api}/products with /
