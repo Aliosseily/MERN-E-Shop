@@ -1,12 +1,17 @@
-const express = require("express");
-const morgan = require("morgan");
+const express = require('express');
+const morgan = require('morgan');
 const app = express();
-const mongoose = require("mongoose");//mongoose is responsible for all operation of mongoDb database in the application or in node application. here ew loke import every library and stor it in the constant 
-
+const mongoose = require('mongoose');//mongoose is responsible for all operation of mongoDb database in the application or in node application. here ew loke import every library and stor it in the constant 
+const cors = require('cors')
 require('dotenv/config') // npm install --save dotenv yo add variables that will be used globally in all files inside the app
+
+
 const api = process.env.API_URL; // target the API_URL defined inside .env file
 
 const productsRouter = require('./routers/products')
+
+app.use(cors()); // enable cors
+app.options('*',cors()); // allow every thing to use this cors, allow all http requests (GET, POST, DELETE, PUT) to be passed from any other origin 
 
 // middleware
 app.use(express.json()); // this is called middleware, express will accept json data, this method allow our data to be understandable by express , which we are sent from front end
