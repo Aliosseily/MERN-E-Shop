@@ -12,4 +12,4 @@ const productSchema = mongoose.Schema({
 
 // creating model which is same as collection in mongoDb and model in Node.js
 // export Product to be used in other files
-exports.Product = mongoose.model('product', productSchema)
+exports.Product = mongoose.model('Product', productSchema)
