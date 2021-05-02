@@ -1,6 +1,8 @@
 const express = require('express');
+const { Product } = require('../models/product')// import product schema . import it as object {} beacause of export structure
+const { Category } = require('../models/category');
 const router = express.Router(); // this router is only responsible for creating API's, storing the API's and sharing them between the files
-const {Product} = require('../models/product')// import product schema . import it as object {} beacause of export structure
+//#region 
 // app.get(`${api}/products`, (req, res) => {
 //     const product = {
 //         id: 1,
@@ -9,6 +11,14 @@ const {Product} = require('../models/product')// import product schema . import 
 //     }
 //     res.send(product)
 // })
+// app.post(`${api}/products`, (req, res) => {
+//     const newProduct = req.body;
+//     console.log("newProduct", newProduct)
+//     res.send(newProduct)
+// })
+//#endregion
+
+
 // replace app.get with router.getand ${api}/products with /
 router.get(`/`, async (req, res) => {
     // we should wait the database to send us the response then we send it to frontend
@@ -18,26 +28,40 @@ router.get(`/`, async (req, res) => {
     }
     res.send(productsList);
 })
-// app.post(`${api}/products`, (req, res) => {
-//     const newProduct = req.body;
-//     console.log("newProduct", newProduct)
-//     res.send(newProduct)
-// })
+
 // replace app.post with router.post and ${api}/products with /
-router.post(`/`, (req, res) => {
-    const product = new Product({
-        name: req.body.name,
-        image: req.body.image,
-        countInStick: req.body.countInStick,
-    })
-    product.save().then((createdProduct) => { // you can use async await instead
-        res.status(201).json(createdProduct);
-    }).catch((err) => {
-        res.status(500).json({
-            error: err,
-            succsee: false
+router.post(`/`, async (req, res) => {
+    try {
+        const category = await Category.findById(req.body.category) // category is category id sent from frontend
+        if (!category) { // check if category id exists
+            return res.status(400).send('Invalid category!');
+        }
+        let product = new Product({
+            name: req.body.name,
+            description: req.body.description,
+            richDescription: req.body.richDescription,
+            image: req.body.image,
+            images: req.body.images,
+            brand: req.body.brand,
+            price: req.body.price,
+            category: req.body.category,
+            countInStock: req.body.countInStock,
+            rating: req.body.rating,
+            numReviews: req.body.numReviews,
+            isFeatured: req.body.isFeatured,
+            dateCreated: req.body.dateCreated
         })
-    })
+        product = await product.save();
+
+        if (!product) {
+            return res.status(500).send('The product cannot be created!');
+        }
+        res.send(product);
+    } catch (err) {
+        console.log("err", err)
+        return res.status(500).send('Error occured!');
+
+    }
 })
 
 module.exports = router;

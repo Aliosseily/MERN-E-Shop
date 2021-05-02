@@ -10,7 +10,7 @@ const productSchema = mongoose.Schema({
         type: String,
         required: true
     },
-    description: {
+    richDescription: {
         type: String,
         default: '' // default value if not entered
     },
