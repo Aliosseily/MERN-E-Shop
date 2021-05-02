@@ -73,4 +73,42 @@ router.post(`/`, async (req, res) => {
     }
 })
 
+router.put('/:id', async (req, res) => {
+    try{
+        const category = await Category.findById(req.body.category) // category is category id sent from frontend
+        if (!category) { // check if category id exists
+            return res.status(400).send('Invalid category!');
+        }
+    const product = await Product.findByIdAndUpdate(
+        req.params.id,
+        {
+            name: req.body.name,
+            description: req.body.description,
+            richDescription: req.body.richDescription,
+            image: req.body.image,
+            images: req.body.images,
+            brand: req.body.brand,
+            price: req.body.price,
+            category: req.body.category,
+            countInStock: req.body.countInStock,
+            rating: req.body.rating,
+            numReviews: req.body.numReviews,
+            isFeatured: req.body.isFeatured,
+            dateCreated: req.body.dateCreated
+        },
+        {new : true} // this mean that I want to return the new updated data not the old one
+    )
+
+    if (!product) {
+        return res.status(404).send('The product cannot be updated!');
+    }
+    res.send(product);
+}
+catch(err){
+    console.log(err)
+    return res.status(500).send('Error occured while trying to update this product!');
+
+}
+})
+
 module.exports = router;
