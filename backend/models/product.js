@@ -48,7 +48,7 @@ const productSchema = mongoose.Schema({
         type: Number,
         default: 0
     },
-    isFeatured: {
+    isFeatured: { // used to get the products to be viewed in the home page 
         type: Boolean,
         default: false
     },

@@ -142,6 +142,15 @@ router.get(`/get/count`, async (req, res) => {
     if (!productsCount) { // in case of error
         res.status(500).json({ success: false })
     }
-    res.send({productsCount}); // return productsCount as object
+    res.send({ productsCount }); // return productsCount as object
+})
+
+router.get(`/get/featured/:count`, async (req, res) => {
+    const count = req.params.count ? req.params.count : 0
+    const featuredProducts = await Product.find({ isFeatured: true }).limit(+count) // get list of all products that has isFeatured field true and limit the list returned by using limit and passing count to it
+    if (!featuredProducts) { // in case of error
+        res.status(500).json({ success: false })
+    }
+    res.send({ featuredProducts }); // return productsCount as object
 })
 module.exports = router;
