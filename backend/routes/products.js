@@ -31,7 +31,7 @@ router.get(`/`, async (req, res) => {
     }
     // we should wait the database to send us the response then we send it to frontend
     const productsList = await Product.find(filter).populate('category'); // populate means that any connected id or field to another table will be displayed as detailed in this field (ex: here product related to category by categry id);
-    //const productsList = await Product.find().select('name image -_id'); // return only the selected data from array instead of the whole array
+    //const productsList = await Product.find().select('name image -_id'); // return only the selected data from array instead of the whole array and execlude _id
     if (!productsList) { // in case of error
         res.status(500).json({ success: false })
     }
