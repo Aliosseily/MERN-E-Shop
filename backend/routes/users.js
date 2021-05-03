@@ -100,4 +100,27 @@ router.post('/login', async (req, res) => {
     }
 })
 
+
+//http://localhost:3000/api/v1/users/get/count
+router.get(`/get/count`, async (req, res) => {
+    const usersCount = await User.countDocuments((count) => count); //(count) => count) get count return count and store it in productsCount variable
+    if (!usersCount) { // in case of error
+        res.status(500).json({ success: false })
+    }
+    res.send({ usersCount }); // return usersCount as object
+})
+
+router.delete('/:id', async (req, res) => {
+    try {
+        let deletedUser = await User.findByIdAndRemove(req.params.id) // get id param from frontend
+        if (!deletedUser) {
+            return res.status(404).json({ success: false, message: 'User not found!' });
+        }
+        return res.status(200).json({ success: true, message: 'User deleted' });
+    } catch (err) {
+        return res.status(400).json({ success: false, error: err });
+
+    }
+})
+
 module.exports = router;
