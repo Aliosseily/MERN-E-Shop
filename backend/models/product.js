@@ -57,6 +57,14 @@ const productSchema = mongoose.Schema({
         default: Date.now
     }
 })
+// create new virtual attribute from products object , instead of having _id this will create another field called id
+productSchema.virtual('id').get(function () {
+    return this._id.toHexString(); // toHexString because we have hexSting for id called object Id
+})
+// enable virtual fields created above (id)
+productSchema.set('toJSON',{
+    virtuals:true 
+})
 
 // creating model which is same as collection in mongoDb and model in Node.js
 // export Product to be used in other files

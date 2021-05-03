@@ -22,8 +22,15 @@ const mongoose = require('mongoose');
 
 // replace app.get with router.getand ${api}/products with /
 router.get(`/`, async (req, res) => {
+    let filter = {};
+    // another type of parameter id query parameter (:id url parameter , and body parmeter)
+    if (req.query.categories) {
+        // get categories from url ex : http://localhost:300/api/v1/products?categories=15255,9845665
+        filter = { category: req.query.categories.split(',') } // sploit the categories
+        console.log('filter',filter)
+    }
     // we should wait the database to send us the response then we send it to frontend
-    const productsList = await Product.find().populate('category'); // populate means that any connected id or field to another table will be displayed as detailed in this field (ex: here product related to category by categry id);
+    const productsList = await Product.find(filter).populate('category'); // populate means that any connected id or field to another table will be displayed as detailed in this field (ex: here product related to category by categry id);
     //const productsList = await Product.find().select('name image -_id'); // return only the selected data from array instead of the whole array
     if (!productsList) { // in case of error
         res.status(500).json({ success: false })
