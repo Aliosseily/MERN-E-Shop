@@ -1,3 +1,4 @@
+//secure the API's in our server using express-jwt 
 const expressJwt = require('express-jwt');
 
 function authJwt() {

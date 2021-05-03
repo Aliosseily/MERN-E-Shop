@@ -52,7 +52,7 @@ router.post('/login', async (req, res) => {
     }
     // decrypt passwordHash and compare it with password entered by user
     if (user && bcrypt.compareSync(req.body.password, user.passwordHash)) { // if user and password entered right ?
-        const token = jwt.sign(
+        const token = jwt.sign( // generate token using jwt
             {
                 userId: user.id // here you can pass the data (any data) you want with the token
             },
