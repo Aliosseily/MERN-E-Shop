@@ -1,6 +1,7 @@
 const {User} = require('../models/user');
 const express = require('express');
 const router = express.Router();
+const bcrypt = require('bcryptjs');
 
 router.get(`/`, async (req, res) =>{
     const userList = await User.find();
@@ -15,7 +16,8 @@ router.post('/', async (req, res) => {
     let user = new User({
         name: req.body.name,
         email: req.body.email,
-        passwordHash: req.body.passwordHash,
+        // we send password field which is not added in schema model and assign it to passwordHash
+        passwordHash: bcrypt.hashSync(req.body.password, 10), // 10 is called salt you can add any thing. it is like extra secret information so any person cannot decrypt this hash
         phone: req.body.phone,
         isAdmin: req.body.isAdmin,
         street: req.body.street,
