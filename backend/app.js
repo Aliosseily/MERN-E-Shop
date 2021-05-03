@@ -22,7 +22,7 @@ app.use(express.json()); // this is called middleware, express will accept json 
 app.use(morgan('tiny')); // this is library morgan npm install morgan used to log http requests in the console 
 app.use(authJwt()); // our server is secured by the token, so any request will come, will be asked authentication
 app.use(errorHandler) // this method will be executed every time there is an error in our api 
-// instead of add it directly handle errors inside app.js here, we can create helper file and add the logic inside it and then use it here like we do above app.use(errorHandler)
+// instead of handling errors directly inside app.js here, we can create helper file and add the logic inside it and then use it here like we do above app.use(errorHandler)
 // app.use((err, req, res, next) => {
 //     if (err) {
 //         return res.status(500).json({ message: err })
