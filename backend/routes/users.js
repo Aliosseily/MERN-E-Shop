@@ -56,7 +56,7 @@ router.post('/login', async (req, res) => {
             {
                 userId: user.id // here you can pass the data (any data) you want with the token
             },
-           // this called secreet is like a password you chose on your own used to create your tokens . it can be any string
+           // this called secret is like a password you choose on your own used to create your tokens . it can be any string
            // the token is created by thi secret string which can be any thing , and this secret no body knows about it . So no one can create same tokens which are used in your web shop
            secret, //'secrete' you can add it as string directly or load it from .env file
            {expiresIn : '1d'} // token expires in 1 day , 1w 1 week
