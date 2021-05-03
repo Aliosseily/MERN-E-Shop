@@ -45,6 +45,7 @@ router.post('/', async (req, res) => {
 })
 // this api for user to register
 router.post('/register', async (req, res) => {
+    console.log("bodddddddddy",req)
     let user = new User({
         name: req.body.name,
         email: req.body.email,
@@ -76,7 +77,10 @@ router.post('/login', async (req, res) => {
     if (user && bcrypt.compareSync(req.body.password, user.passwordHash)) { // if user and password entered right ?
         const token = jwt.sign( // generate token using jwt
             {
-                userId: user.id // here you can pass the data (any data) you want with the token
+                // here you can pass the data (any data) you want with inside the token
+                // you can pass some secrete data to be only comes with the token, if the user doesn't have this information in the token , I will not allow him to do something
+                userId: user.id ,
+                isAdmin:user.isAdmin // pass isAdmin to token to allow only admin users to access admin panel 
             },
            // this called secret is like a password you choose on your own used to create your tokens . it can be any string
            // the token is created by thi secret string which can be any thing , and this secret no body knows about it . So no one can create same tokens which are used in your web shop
