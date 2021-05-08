@@ -31,7 +31,7 @@ router.post('/', async (req, res) => {
          quantity: orderItem.quantity,
          product:orderItem.product
      })
-     newOrderItem = await newOrderItem.save(); // we are saving the order item in the database
+     newOrderItem = await newOrderItem.save(); // Saving the orderitems of order in the database
      return newOrderItem._id; // return only the ids of the order items sent from the user
  }))
     const orderItemsIdsResolved = await orderItemsIds
@@ -53,6 +53,43 @@ router.post('/', async (req, res) => {
         return res.status(404).send('The order cannot be created!');
     }
     res.send(order);
+})
+
+router.put('/:id', async (req, res) => {
+    try{
+    const order = await Order.findByIdAndUpdate(
+        req.params.id,
+        {
+            status: req.body.status,
+        },
+        {new : true} // this mean that I want to return the new updated data not the old one
+    )
+
+    if (!order) {
+        return res.status(404).send('The order cannot be updated!');
+    }
+    res.send(order);
+}
+catch(err){
+    console.log("ERRRRRRRRRRRRR" , err)
+}
+})
+
+router.delete('/:id', async (req, res) => {
+    try {
+        let deletedOrder = await Order.findByIdAndRemove(req.params.id) // get id param from frontend
+        if (!deletedOrder) {
+            return res.status(404).json({ success: false, message: 'Order not found!' });
+        }
+        // delete related orderitems when order deleted
+        await deletedOrder.orderItems.map(async orderItem => {
+             await OrderItem.findByIdAndRemove(orderItem)
+         })
+        return res.status(200).json({ success: true, message: 'Order deleted' });
+    } catch (err) {
+        return res.status(400).json({ success: false, error: err });
+
+    }
 })
 
 module.exports =router;
