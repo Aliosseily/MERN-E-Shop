@@ -2,7 +2,7 @@ const { Order } = require('../models/order');
 const express = require('express');
 const { OrderItem } = require('../models/order-item');
 const router = express.Router();
-
+// get all orders
 router.get(`/`, async (req, res) => {
     // get only the name in the populated user object, and sort result by date , you can use .sort('dateOrdered'); like this, -1 measn that sort form newest to oldes
     const orderList = await Order.find().populate('user', 'name').sort({ 'dateOrdered': -1 });
@@ -12,7 +12,7 @@ router.get(`/`, async (req, res) => {
     }
     res.send(orderList);
 })
-
+// get specific order by order id 
 router.get(`/:id`, async (req, res) => {
     const order = await Order.findById(req.params.id)
         .populate('user', 'name') // populate user inside orders and get only user name
@@ -23,7 +23,7 @@ router.get(`/:id`, async (req, res) => {
     }
     res.send(order);
 })
-
+// create new order
 router.post('/', async (req, res) => {
     //Promise.all to combine two promises togrther [ Promise { <pending> }, Promise { <pending> } ] returned, because user sned array of items together we got multiple promises
     const orderItemsIds = Promise.all(req.body.orderItems.map(async orderItem => { // loop over the array of order items sent from the user
@@ -67,7 +67,7 @@ router.post('/', async (req, res) => {
     }
     res.send(order);
 })
-
+//update order
 router.put('/:id', async (req, res) => {
     try {
         const order = await Order.findByIdAndUpdate(
@@ -87,7 +87,7 @@ router.put('/:id', async (req, res) => {
         console.log("ERRRRRRRRRRRRR", err)
     }
 })
-
+// delete order
 router.delete('/:id', async (req, res) => {
     try {
         let deletedOrder = await Order.findByIdAndRemove(req.params.id) // get id param from frontend
@@ -104,7 +104,7 @@ router.delete('/:id', async (req, res) => {
 
     }
 })
-
+// get the total price of all orders 
 router.get('/get/totalsales', async (req, res) => {
     //Aggregation operations group values from multiple documents together, and can perform a variety of operations on the grouped data to return a single result.
     // aggregate like join in relatiional database, we can group all tables or documents inside that table to one, and then i get one of these fields in that table and use one of mongoose methods $sum for example for specific field , and it will return to me the sum of all field of the same name 
@@ -120,8 +120,7 @@ router.get('/get/totalsales', async (req, res) => {
     res.send({totalsales:totalSales.pop().totalsales})
 
 })
-
-
+// count the number of orders
 router.get(`/get/count`, async (req, res) => {
     // countDocuments to count the number of orders
     const ordersCount = await Order.countDocuments((count) => count); //(count) => count) get count return count and store it in ordersCount variable
@@ -129,6 +128,15 @@ router.get(`/get/count`, async (req, res) => {
         res.status(500).json({ success: false })
     }
     res.send({ ordersCount }); // return ordersCount as object
+})
+// get list of orders for specific user
+router.get(`/get/userorders/:userid`, async (req, res) => {
+    const userOrdersList = await Order.find({user:req.params.userid})
+    .populate({path:'orderItems' , populate:{path:'product', populate: 'category'}}).sort({'dateOrdered': -1})
+    if (!userOrdersList) {
+         res.status(500).json({ success: false })
+     }
+     res.send(userOrdersList);
 })
 
 module.exports = router;
