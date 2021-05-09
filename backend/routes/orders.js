@@ -105,4 +105,30 @@ router.delete('/:id', async (req, res) => {
     }
 })
 
+router.get('/get/totalsales', async (req, res) => {
+    //Aggregation operations group values from multiple documents together, and can perform a variety of operations on the grouped data to return a single result.
+    // aggregate like join in relatiional database, we can group all tables or documents inside that table to one, and then i get one of these fields in that table and use one of mongoose methods $sum for example for specific field , and it will return to me the sum of all field of the same name 
+    const totalSales = await Order.aggregate([
+        // get the sum of all totalPrice fileds in every order by using mongoose $sum method
+        // mongoose cannot return object without an id
+        // get the sum of totalPrice filed in each order
+        {$group :{_id:null , totalsales : {$sum : '$totalPrice'}}}
+    ])
+    if(!totalSales){
+        res.status(400).send('The order itme cannot be generated!')
+    }
+    res.send({totalsales:totalSales.pop().totalsales})
+
+})
+
+
+router.get(`/get/count`, async (req, res) => {
+    // countDocuments to count the number of orders
+    const ordersCount = await Order.countDocuments((count) => count); //(count) => count) get count return count and store it in ordersCount variable
+    if (!ordersCount) { // in case of error
+        res.status(500).json({ success: false })
+    }
+    res.send({ ordersCount }); // return ordersCount as object
+})
+
 module.exports = router;
