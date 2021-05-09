@@ -3,6 +3,8 @@ const { Product } = require('../models/product')// import product schema . impor
 const { Category } = require('../models/category');
 const router = express.Router(); // this router is only responsible for creating API's, storing the API's and sharing them between the files
 const mongoose = require('mongoose');
+// multer is a library used to upload files to our server
+const multer = require('multer');
 //#region 
 // app.get(`${api}/products`, (req, res) => {
 //     const product = {
@@ -18,6 +20,21 @@ const mongoose = require('mongoose');
 //     res.send(newProduct)
 // })
 //#endregion
+
+
+// https://github.com/expressjs/multer#readme
+// diskStorage is used to generate unique name for every file we need to upload it to server, to not lose some files because hey have same name 
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, 'public/uploads') // upload destination where my files located when uploaded, when upload file it will be located in this destination
+    },
+    filename: function (req, file, cb) { // filename is the name of the file generated unique
+      const fileName = file.originalname.split(" ").join('-')// replace " " with -
+      cb(null, `${fileName}-${Date.now()}.${extension}`)
+    }
+  })
+  
+  const uploadOptions = multer({ storage: storage })
 
 
 // replace app.get with router.getand ${api}/products with /
@@ -55,17 +72,22 @@ router.get(`/:id`, async (req, res) => {
 })
 
 // replace app.post with router.post and ${api}/products with /
-router.post(`/`, async (req, res) => {
+//  uploadOptions.single('image') image is the filed I want to send from frontend
+router.post(`/`, uploadOptions.single('image'), async (req, res) => {
     try {
         const category = await Category.findById(req.body.category) // category is category id sent from frontend
         if (!category) { // check if category id exists
             return res.status(400).send('Invalid category!');
         }
+        const fileName = req.file.filename; // multer send us with this request the file name, cmoing from diskStorage defined above
+       //req.protocol => this will return 'http'
+       //req.get('host') => this will return host from the request 'localhost:3000'
+        const basePath = `${req.protocol}://${req.get('host')}/public/uploads/`
         let product = new Product({
             name: req.body.name,
             description: req.body.description,
             richDescription: req.body.richDescription,
-            image: req.body.image,
+            image: `${basePath}${fileName}`, // we should insert the full path of the file  http://localhost:3000/public/upload/filename.jpg
             images: req.body.images,
             brand: req.body.brand,
             price: req.body.price,
@@ -129,7 +151,6 @@ router.put('/:id', async (req, res) => {
 
     }
 })
-
 
 router.delete('/:id', async (req, res) => {
     try {

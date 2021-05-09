@@ -23,7 +23,7 @@ router.get(`/:id`, async (req, res) => {
     }
     res.send(order);
 })
-// create new order
+// create new order and create order items of the order
 router.post('/', async (req, res) => {
     //Promise.all to combine two promises togrther [ Promise { <pending> }, Promise { <pending> } ] returned, because user sned array of items together we got multiple promises
     const orderItemsIds = Promise.all(req.body.orderItems.map(async orderItem => { // loop over the array of order items sent from the user
@@ -67,7 +67,7 @@ router.post('/', async (req, res) => {
     }
     res.send(order);
 })
-//update order
+//update the status of the order (admin can update the status from pending to shipped ...)
 router.put('/:id', async (req, res) => {
     try {
         const order = await Order.findByIdAndUpdate(
@@ -87,7 +87,7 @@ router.put('/:id', async (req, res) => {
         console.log("ERRRRRRRRRRRRR", err)
     }
 })
-// delete order
+// delete order and its related items
 router.delete('/:id', async (req, res) => {
     try {
         let deletedOrder = await Order.findByIdAndRemove(req.params.id) // get id param from frontend
