@@ -14,7 +14,8 @@ function authJwt() {
             //{url:`${api}/products` , method:['GET' , 'OPTIONS']}, // make all GET requests excluded from being authenticated, so now all GET products Api's will not need token to be returned
             {url: /\/api\/v1\/products(.*)/ , methods: ['GET', 'OPTIONS'] },// regular expression to specify every thing after the products instead of writing each url individually 
             {url: /\/api\/v1\/categories(.*)/ , methods: ['GET', 'OPTIONS'] },
-            {url: /\/api\/v1\/orders(.*)/,methods: ['GET', 'OPTIONS', 'POST']},
+            // {url: /\/api\/v1\/orders(.*)/,methods: ['GET', 'OPTIONS', 'POST']},
+            {url: /\/public\/uploads(.*)/ , methods: ['GET', 'OPTIONS'] }, // execlude authentication from images URL's
             `${api}/users/login`,
             `${api}/users/register`,
         ]
