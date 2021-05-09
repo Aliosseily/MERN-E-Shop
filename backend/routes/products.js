@@ -180,6 +180,36 @@ router.put('/:id',uploadOptions.single('image'),  async (req, res) => {
 
     }
 })
+// update the gallery images of the product after adding the product with the post request
+// uploadOptions.array('images', 10) 10 is the max number of images can be uploaded
+router.put('/gallery-images/:id', uploadOptions.array('images', 10), async (req, res) =>{
+    if (!mongoose.isValidObjectId(req.params.id)) { // this will check if the id of product to be updated is valid or not
+        return res.status(400).send('Invalid Product Id!');
+    }
+    console.log("ruuun")
+    const files = req.files; // get all files
+    const basePath = `${req.protocol}://${req.get('host')}/public/uploads/`;
+
+    let imagesPaths = [];
+
+    if(files){
+     files.map((file) => {
+        imagesPaths.push(`${basePath}${file.filename}`)
+     })
+    }
+    console.log("imagesPaths",imagesPaths)
+    const updatedProduct = await Product.findByIdAndUpdate(
+        req.params.id,
+        {
+            images: imagesPaths
+        },
+        { new: true } // this mean that I want to return the new updated data not the old one
+    )
+    if (!updatedProduct) {
+        return res.status(404).send('The product cannot be updated!');
+    }
+    res.send(updatedProduct);
+})
 
 router.delete('/:id', async (req, res) => {
     try {
