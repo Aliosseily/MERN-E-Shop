@@ -21,15 +21,28 @@ const multer = require('multer');
 // })
 //#endregion
 
+// this file contain the list of file type that are allowed to be uploaded
+const FILE_TYPE_MAP = {
+    'image/png':'png', // key image/png is the minmetype,  and value png
+    'image/jpeg':'jpeg', 
+    'image/jpg':'jpg'     
+}
 
 // https://github.com/expressjs/multer#readme
 // diskStorage is used to generate unique name for every file we need to upload it to server, to not lose some files because hey have same name 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-      cb(null, 'public/uploads') // upload destination where my files located when uploaded, when upload file it will be located in this destination
+       const isValidFile = FILE_TYPE_MAP[file.mimetype] // check if the value of file is found in my FILE_TYPE_MAP list, it will get the mime type and check if it is founf in tha MAP
+       let uploadError = new Error('invalid image type');
+       if(isValidFile){ // if isValidFile uploadError is null, no error.
+        uploadError = null
+       }
+        cb(uploadError, 'public/uploads') // upload destination where my files located when uploaded, when upload file it will be located in this destination
     },
     filename: function (req, file, cb) { // filename is the name of the file generated unique
       const fileName = file.originalname.split(" ").join('-')// replace " " with -
+      // mimetype will include the file information with the extension of the mimetype   
+        const extension = FILE_TYPE_MAP[file.mimetype]// it will got to FILE_TYPE_MAP array and check the mimetype(image/png...) and then assign the extension as value
       cb(null, `${fileName}-${Date.now()}.${extension}`)
     }
   })
