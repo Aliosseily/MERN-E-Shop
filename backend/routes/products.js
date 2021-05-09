@@ -92,6 +92,10 @@ router.post(`/`, uploadOptions.single('image'), async (req, res) => {
         if (!category) { // check if category id exists
             return res.status(400).send('Invalid category!');
         }
+
+        const file = req.file;
+        if(!file) return res.status(400).send("No image in the request!")
+
         const fileName = req.file.filename; // multer send us with this request the file name, cmoing from diskStorage defined above
        //req.protocol => this will return 'http'
        //req.get('host') => this will return host from the request 'localhost:3000'
@@ -124,22 +128,34 @@ router.post(`/`, uploadOptions.single('image'), async (req, res) => {
     }
 })
 
-router.put('/:id', async (req, res) => {
+router.put('/:id',uploadOptions.single('image'),  async (req, res) => {
     if (!mongoose.isValidObjectId(req.params.id)) { // this will check if the id of product to be updated is valid or not
         return res.status(400).send('Invalid Product Id!');
     }
     try {
         const category = await Category.findById(req.body.category) // category is category id sent from frontend
-        if (!category) { // check if category id exists
-            return res.status(400).send('Invalid category!');
+        if (!category) return res.status(400).send('Invalid category!'); // check if category id exists
+        const product = await Product.findById(req.params.id);
+        if (!product) res.status(400).send('Invalid Product!') // chaeck if product is valid , if the user updating a right product
+
+        const file = req.file;
+        let imagePath; 
+
+        if(file){ // if user enter new image , the get the new image path
+            const fileName = req.file.filename; 
+            const basePath = `${req.protocol}://${req.get('host')}/public/uploads/`;
+            imagePath =`${basePath}${fileName}`
         }
-        const product = await Product.findByIdAndUpdate(
+        else{ //if the user do not change the image, then take the old one
+            imagePath = product.image;
+        }
+        const updatedProduct = await Product.findByIdAndUpdate(
             req.params.id,
             {
                 name: req.body.name,
                 description: req.body.description,
                 richDescription: req.body.richDescription,
-                image: req.body.image,
+                image: imagePath,
                 images: req.body.images,
                 brand: req.body.brand,
                 price: req.body.price,
@@ -153,10 +169,10 @@ router.put('/:id', async (req, res) => {
             { new: true } // this mean that I want to return the new updated data not the old one
         )
 
-        if (!product) {
+        if (!updatedProduct) {
             return res.status(404).send('The product cannot be updated!');
         }
-        res.send(product);
+        res.send(updatedProduct);
     }
     catch (err) {
         console.log(err)
