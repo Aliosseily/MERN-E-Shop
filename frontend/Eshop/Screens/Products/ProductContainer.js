@@ -1,10 +1,18 @@
 import React from 'react'
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, FlatList} from 'react-native';
+
+import Products from '../../assets/data/products.json'
 
 const ProductContainer = () => {
     return(
         <View>
-            <Text>Hello</Text>
+            <FlatList
+            data={Products}
+            keyExtractor={item => item.name}
+            renderItem={itemData =>
+            <Text>{itemData.item.brand}</Text>
+            }
+            />
         </View>
     )
 }
