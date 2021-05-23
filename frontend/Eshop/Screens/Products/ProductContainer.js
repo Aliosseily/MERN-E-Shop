@@ -1,10 +1,12 @@
 import React, { useState } from 'react'
-import { View, StyleSheet, FlatList } from 'react-native';
+import { View, StyleSheet, FlatList,Dimensions } from 'react-native';
 import { Container, Header, Icon, Item, Input, Text } from 'native-base';
 
 import Products from '../../assets/data/products.json'
 import ProductList from './ProductList';
 import SearchedProduct from './SearchedProduct';
+import Banner from '../../Shared/Banner';
+var { height } = Dimensions.get('window')
 
 const ProductContainer = () => {
     const [productsFiltered, setProductsFiltered] = useState(Products);
@@ -38,27 +40,48 @@ const ProductContainer = () => {
             </Header>
             {focus === true ?
                 (<SearchedProduct productsFilterd={productsFiltered} />)
-                    :
-                    (   <View>
-                        <Text>Product Container</Text>
-                        <View style={{ marginTop: 100 }}>
-                            <FlatList
-                                numColumns={2}
-                                data={Products}
-                                keyExtractor={item => item.name}
-                                renderItem={item =>
-                                    <ProductList
-                                        key={item.id}
-                                        item={item.item}
-                                    />
-                                }
-                            />
-                        </View>
-                    </View>)
+                :
+                (<View style={styles.container}>
+                    <View>
+                        <Banner />
+                    </View>
+                    <View style={styles.listContainer}>
+                        <FlatList
+                            numColumns={2}
+                            data={Products}
+                            keyExtractor={item => item.name}
+                            renderItem={item =>
+                                <ProductList
+                                    key={item.id}
+                                    item={item.item}
+                                />
+                            }
+                        />
+                    </View>
+                </View>)
             }
-         
+
         </Container>
     )
 }
+
+const styles = StyleSheet.create({
+    container: {
+        flexWrap: "wrap",
+        backgroundColor: "gainsboro",
+      },
+      listContainer: {
+        height: height,
+        flex: 1,
+        flexDirection: "row",
+        alignItems: "flex-start",
+        flexWrap: "wrap",
+        backgroundColor: "gainsboro",
+      },
+      center: {
+          justifyContent: 'center',
+          alignItems: 'center'
+      }
+})
 
 export default ProductContainer;

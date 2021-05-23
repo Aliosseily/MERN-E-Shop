@@ -1,7 +1,9 @@
 import React from 'react';
-import { StyleSheet, View, Text} from 'react-native';
+import { LogBox, StyleSheet, View} from 'react-native';
 import ProductContainer from './Screens/Products/ProductContainer';
 import Header from './Shared/Header';
+
+LogBox.ignoreAllLogs(true)
 
 export default function App() {
 
