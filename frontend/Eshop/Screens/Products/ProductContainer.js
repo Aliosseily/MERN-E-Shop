@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { View, StyleSheet, FlatList,Dimensions,ScrollView } from 'react-native';
+import { View, StyleSheet, FlatList, Dimensions, ScrollView } from 'react-native';
 import { Container, Header, Icon, Item, Input, Text } from 'native-base';
 
 import Products from '../../assets/data/products.json';
@@ -15,7 +15,7 @@ const ProductContainer = () => {
     const [focus, setFocus] = useState(false); // state to know when we focus on input
     const [active, setActive] = useState(-1);
     const [initialState, setInitialState] = useState(Products);
-    const [productsCtg, setProductsCtg] = useState([]);
+    const [productsCtg, setProductsCtg] = useState(initialState);
 
     //numColumns={2} devide screen into 2 columns
     const searchProduct = text => {
@@ -31,11 +31,11 @@ const ProductContainer = () => {
         setFocus(false);
     }
 
-    const changeCtg = category =>{
+    const changeCtg = category => {
         {
-            category === "all"  
-            ? [setProductsCtg(initialState), setActive(true)]
-            : [setProductsCtg(Products.filter(prod => prod.category._id === category )),setActive(true)]
+            category === "all"
+                ? [setProductsCtg(initialState), setActive(true)]
+                : [setProductsCtg(Products.filter(prod => prod.category.$oid === category.$oid)), setActive(true)]
         }
     }
 
@@ -54,21 +54,42 @@ const ProductContainer = () => {
             {focus === true ?
                 (<SearchedProduct productsFilterd={productsFiltered} />)
                 :
-                (<View>
-                    <View>
-                        <Banner />
-                    </View>
-                    <View>
-                    <CategoryFilter
-                    categories = {Categories}
-                    categoryFilter={changeCtg}
-                    products={productsCtg}
-                    active={active}
-                    setActive={setActive}
-                    />
-                    </View>
-                    <View style={styles.listContainer}>
-                        <FlatList
+                (
+                    <ScrollView >
+                        <View>
+                            <View>
+                                <Banner />
+                            </View>
+                            <View>
+                                <CategoryFilter
+                                    categories={Categories}
+                                    categoryFilter={changeCtg}
+                                    products={productsCtg}
+                                    active={active}
+                                    setActive={setActive}
+                                />
+                            </View>
+                            {productsCtg.length > 0 ?
+                                (
+                                    <View style={styles.listContainer}>
+                                        {productsCtg.map(item => {
+                                            return (
+                                                <ProductList
+                                                    key={item._id.$oid}
+                                                    item={item}
+                                                />
+                                            )
+                                        })}
+                                    </View>
+                                ) :
+                                (
+                                    <View style={[styles.center,{height:height/2}]}>
+                                        <Text>No products found!</Text>
+                                    </View>
+                                )
+                            }
+                            {/* <View style={styles.listContainer}>
+                                <FlatList
                             numColumns={2}
                             data={Products}
                             keyExtractor={item => item.name}
@@ -78,9 +99,11 @@ const ProductContainer = () => {
                                     item={item.item}
                                 />
                             }
-                        />
-                    </View>
-                </View>)
+                        /> 
+                            </View>*/}
+                        </View>
+                    </ScrollView>
+                )
             }
 
         </Container>
@@ -91,19 +114,19 @@ const styles = StyleSheet.create({
     container: {
         flexWrap: "wrap",
         backgroundColor: "gainsboro",
-      },
-      listContainer: {
+    },
+    listContainer: {
         height: height,
         flex: 1,
         flexDirection: "row",
         alignItems: "flex-start",
         flexWrap: "wrap",
         backgroundColor: "gainsboro",
-      },
-      center: {
-          justifyContent: 'center',
-          alignItems: 'center'
-      }
+    },
+    center: {
+        justifyContent: 'center',
+        alignItems: 'center'
+    }
 })
 
 export default ProductContainer;
