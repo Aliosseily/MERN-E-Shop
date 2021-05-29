@@ -1,18 +1,22 @@
 import React, { useState } from 'react'
-import { View, StyleSheet, FlatList,Dimensions } from 'react-native';
+import { View, StyleSheet, FlatList,Dimensions,ScrollView } from 'react-native';
 import { Container, Header, Icon, Item, Input, Text } from 'native-base';
 
-import Products from '../../assets/data/products.json'
+import Products from '../../assets/data/products.json';
+import Categories from '../../assets/data/products.json';
 import ProductList from './ProductList';
 import SearchedProduct from './SearchedProduct';
+import CategoryFilter from './CategoryFilter';
 import Banner from '../../Shared/Banner';
 var { height } = Dimensions.get('window')
 
 const ProductContainer = () => {
     const [productsFiltered, setProductsFiltered] = useState(Products);
     const [focus, setFocus] = useState(false); // state to know when we focus on input
-    //numColumns={2} devide screen into 2 columns
+    const [active, setActive] = useState(-1);
+    const [initialState, setInitialState] = useState(Products);
 
+    //numColumns={2} devide screen into 2 columns
     const searchProduct = text => {
         let filtered = Products.filter(product => product.name.toLocaleLowerCase().includes(text.toLocaleLowerCase()))
         setProductsFiltered(filtered)
@@ -41,9 +45,12 @@ const ProductContainer = () => {
             {focus === true ?
                 (<SearchedProduct productsFilterd={productsFiltered} />)
                 :
-                (<View style={styles.container}>
+                (<View>
                     <View>
                         <Banner />
+                    </View>
+                    <View>
+                    <CategoryFilter/>
                     </View>
                     <View style={styles.listContainer}>
                         <FlatList
