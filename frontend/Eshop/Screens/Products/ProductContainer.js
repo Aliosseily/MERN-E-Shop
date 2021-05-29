@@ -3,7 +3,7 @@ import { View, StyleSheet, FlatList,Dimensions,ScrollView } from 'react-native';
 import { Container, Header, Icon, Item, Input, Text } from 'native-base';
 
 import Products from '../../assets/data/products.json';
-import Categories from '../../assets/data/products.json';
+import Categories from '../../assets/data/categories.json';
 import ProductList from './ProductList';
 import SearchedProduct from './SearchedProduct';
 import CategoryFilter from './CategoryFilter';
@@ -15,6 +15,7 @@ const ProductContainer = () => {
     const [focus, setFocus] = useState(false); // state to know when we focus on input
     const [active, setActive] = useState(-1);
     const [initialState, setInitialState] = useState(Products);
+    const [productsCtg, setProductsCtg] = useState([]);
 
     //numColumns={2} devide screen into 2 columns
     const searchProduct = text => {
@@ -28,6 +29,14 @@ const ProductContainer = () => {
 
     const onBlur = () => {
         setFocus(false);
+    }
+
+    const changeCtg = category =>{
+        {
+            category === "all"  
+            ? [setProductsCtg(initialState), setActive(true)]
+            : [setProductsCtg(Products.filter(prod => prod.category._id === category )),setActive(true)]
+        }
     }
 
     return (
@@ -50,7 +59,13 @@ const ProductContainer = () => {
                         <Banner />
                     </View>
                     <View>
-                    <CategoryFilter/>
+                    <CategoryFilter
+                    categories = {Categories}
+                    categoryFilter={changeCtg}
+                    products={productsCtg}
+                    active={active}
+                    setActive={setActive}
+                    />
                     </View>
                     <View style={styles.listContainer}>
                         <FlatList
