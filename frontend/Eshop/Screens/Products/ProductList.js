@@ -10,9 +10,14 @@ const ProductList = props => {
     // width / 2 to have two columns
     // {...item} send every thing in props to ProductCart 
     return (
-        <TouchableOpacity style={{ width: '50%' }}>
+        <TouchableOpacity
+            style={{ width: '50%' }}
+            onPress={() =>
+                props.navigation.navigate('Product Detail' , {item:item}) // pass item in the route as param, get it in SingleProduct.js
+            }
+        >
             <View style={{ width: width / 2, backgroundColor: 'gainsboro' }}>
-                <ProductCard {...item} /> 
+                <ProductCard {...item} />
             </View>
         </TouchableOpacity>
     )

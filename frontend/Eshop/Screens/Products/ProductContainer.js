@@ -10,7 +10,7 @@ import CategoryFilter from './CategoryFilter';
 import Banner from '../../Shared/Banner';
 var { height } = Dimensions.get('window')
 
-const ProductContainer = () => {
+const ProductContainer = props => {
     const [productsFiltered, setProductsFiltered] = useState(Products);
     const [focus, setFocus] = useState(false); // state to know when we focus on input
     const [active, setActive] = useState(-1);
@@ -52,7 +52,7 @@ const ProductContainer = () => {
                 </Item>
             </Header>
             {focus === true ?
-                (<SearchedProduct productsFilterd={productsFiltered} />)
+                (<SearchedProduct productsFilterd={productsFiltered} navigation={props.navigation} />)
                 :
                 (
                     <ScrollView >
@@ -75,6 +75,7 @@ const ProductContainer = () => {
                                         {productsCtg.map(item => {
                                             return (
                                                 <ProductList
+                                                    navigation={props.navigation}
                                                     key={item._id.$oid}
                                                     item={item}
                                                 />
