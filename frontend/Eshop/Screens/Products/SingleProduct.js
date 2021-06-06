@@ -2,6 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Image, View, StyleSheet, Text, ScrollView, Button } from 'react-native';
 import { Left, Radio, Container, H1, Right } from 'native-base';
 
+//Redux
+import { connect } from 'react-redux';
+import * as cartActions from '../../Redux/Actions/cartActions';
+
 const SingleProduct = props => {
     const [item, setItem] = useState(props.route.params.item); // take the props from the route
     const [availability, setAvailability] = useState(null);
@@ -27,11 +31,27 @@ const SingleProduct = props => {
                     <Text style={styles.price}>$ {item.price}</Text>
                 </Left>
                 <Right>
-                    <Button title="Add"  />
+                    <Button 
+                    title="Add"  
+                    onPress={() => {
+                        console.log("PROPSALI",props)
+                        props.addItemToCart(item)}}
+                    
+                    />
                 </Right>
             </View>
         </Container>
     )
+}
+
+const mapDispatchToProps = dispatch => {
+return {
+    addItemToCart :(product) =>{
+        console.log("productproductproduct", product)
+        dispatch(cartActions.addToCart({quantity:1, product}))
+    }
+}
+
 }
 
 const styles = StyleSheet.create({
@@ -76,4 +96,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default SingleProduct;
+export default connect(null,mapDispatchToProps)(SingleProduct);

@@ -29,7 +29,10 @@ const ProductCart = props => {
                     <Button
                         title='Add'
                         color='green'
-                        onPress={() => { props.addItemToCart(props) }}
+                        onPress={() => {
+                            console.log("PROPSALIOss",props)
+
+                             props.addItemToCart(props) }}
                     />
                 </View>
             ) : <Text style={{ marginTop: 20 }}>Currently Unavailable</Text>}
