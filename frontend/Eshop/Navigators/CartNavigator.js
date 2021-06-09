@@ -20,7 +20,7 @@ const MyStack = () => {
                 name="Checkout"
                 component={CheckoutNavigator}
                 options={{
-                    headerShown: false
+                    title: 'Checkout'
                 }}
             />
         </Stack.Navigator>
