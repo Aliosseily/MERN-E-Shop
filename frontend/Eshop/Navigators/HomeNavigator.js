@@ -19,7 +19,7 @@ const MyStack = () => {
                 name="Product Detail"
                 component={SingleProduct}
                 options={{
-                    headerShown: false
+                    headerShown: false // remove back button from top of the page
                 }}
             />
         </Stack.Navigator>

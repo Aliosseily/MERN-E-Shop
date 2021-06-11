@@ -84,7 +84,7 @@ const ProductContainer = props => {
                                     </View>
                                 ) :
                                 (
-                                    <View style={[styles.center,{height:height/2}]}>
+                                    <View style={[styles.center, { height: height / 2 }]}>
                                         <Text>No products found!</Text>
                                     </View>
                                 )

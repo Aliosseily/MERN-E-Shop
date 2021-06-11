@@ -3,10 +3,11 @@ import { ScrollView, Dimensions, StyleSheet, Text } from 'react-native';
 
 var { width } = Dimensions.get('window');
 
-const FormContainer = () => {
+const FormContainer = props => {
     //in ScrollView we can't use styles, instead we use contentContainerStyle
+    // {props.children} to take every thing inside |Formcontainer tag when called (Checkout.js)
     return (
-        <ScrollView contentContainerStyle={StyleSheet.container}>
+        <ScrollView contentContainerStyle={styles.container}>
             <Text style={styles.title}>{props.title}</Text>
             {props.children}
         </ScrollView>
@@ -19,7 +20,7 @@ const styles = StyleSheet.create({
         marginBottom: 400,
         width: width,
         justifyContent: 'center',
-        alignContent: 'center'
+        alignItems: 'center'
     },
     title: {
         fontSize: 30
