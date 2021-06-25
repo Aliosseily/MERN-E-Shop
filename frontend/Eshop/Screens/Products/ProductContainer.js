@@ -33,7 +33,7 @@ const ProductContainer = props => {
             //setCategories(Categories);
             setActive(-1);
     
-            axios.get(`http://7c5a135f2a1d.ngrok.io/api/v1/products`, {
+            axios.get(`${baseURL}products`, {
                 headers: {
                     Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MDkwMDdlMzliMzhhNjNmZDRiMzk4OWQiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE2MjQ1NDI1NTIsImV4cCI6MTYyNDYyODk1Mn0.26rIH0msf_ooWFIaVOw3HfIhL2uQ--OGBYBsscy9CXk'
                 }
