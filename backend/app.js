@@ -10,7 +10,7 @@ app.use(cors()); // enable cors
 app.options('*', cors()); // allow every thing to use this cors, allow all http requests (GET, POST, DELETE, PUT) to be passed from any other origin 
 // define the public upload as static folder in the middleware of our application so that images can be shwon to user ex: (http://localhost:3000/public/uploads/Repository.PNG-1620566725991.png) 
 // so any file uploaded to /public/uploads it will not be as an API, it will be like a static path , which is serving the files
-app.use('/public/uploads' , express.static(__dirname + '/public/uploads'))
+app.use('/public/uploads', express.static(__dirname + '/public/uploads'))
 const api = process.env.API_URL; // target the API_URL defined inside .env file
 
 // Routes
@@ -49,7 +49,15 @@ mongoose.connect(process.env.CONNECTION_STRING, {
 
 })
 
-app.listen(3000, () => {
-    console.log("url", api)
-    console.log("server is running http://localhost:3000")
+
+// Development
+// app.listen(3000, () => {
+//     console.log("url", api)
+//     console.log("server is running http://localhost:3000")
+// })
+
+//Production
+var server = app.listen(process.env.PORT || 3000, function () {
+    var port = server.address().port;
+    console.log("Express id working on port" + port);
 })
