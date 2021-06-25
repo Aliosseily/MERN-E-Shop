@@ -1,6 +1,9 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { View, StyleSheet, FlatList, Dimensions, ScrollView } from 'react-native';
 import { Container, Header, Icon, Item, Input, Text } from 'native-base';
+
+import baseURL from '../../assets/common/baseUrl';
+import axios from 'axios';
 
 import Products from '../../assets/data/products.json';
 import Categories from '../../assets/data/categories.json';
@@ -11,15 +14,92 @@ import Banner from '../../Shared/Banner';
 var { height } = Dimensions.get('window')
 
 const ProductContainer = props => {
-    const [productsFiltered, setProductsFiltered] = useState(Products);
-    const [focus, setFocus] = useState(false); // state to know when we focus on input
-    const [active, setActive] = useState(-1);
-    const [initialState, setInitialState] = useState(Products);
-    const [productsCtg, setProductsCtg] = useState(initialState);
+
+
+    const [products, setProducts] = useState([]);
+    const [productsFiltered, setProductsFiltered] = useState([]);
+    const [focus, setFocus] = useState(); // when we focus
+    const [categories, setCategories] = useState([]);
+    const [productsCtg, setProductsCtg] = useState([]);
+    const [active, setActive] = useState();
+    const [initialState, setInitialState] = useState([]);
+    const [loading, setLoading] = useState(true)
+
+    useEffect(() => {
+        console.log("RUUUUUUN", baseURL)
+        setFocus(false);
+        //setCategories(Categories);
+        setActive(-1);
+
+        axios.get(`http://7c5a135f2a1d.ngrok.io/api/v1/products`, {
+            headers: {
+                Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MDkwMDdlMzliMzhhNjNmZDRiMzk4OWQiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE2MjQ1NDI1NTIsImV4cCI6MTYyNDYyODk1Mn0.26rIH0msf_ooWFIaVOw3HfIhL2uQ--OGBYBsscy9CXk'
+            }
+        })
+            .then((res) => {
+                console.log("resresAAAOss", res.data.length)
+                setProducts(res.data)
+                setProductsFiltered(res.data)
+                setProductsCtg(res.data)
+                setInitialState(res.data)
+                console.log("productsCtg", productsCtg.length)
+
+            })
+            .catch(error => console.log("error", error));
+
+
+        axios.get(`http://7c5a135f2a1d.ngrok.io/api/v1/categories`, {
+            headers: {
+                Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MDkwMDdlMzliMzhhNjNmZDRiMzk4OWQiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE2MjQ1NDI1NTIsImV4cCI6MTYyNDYyODk1Mn0.26rIH0msf_ooWFIaVOw3HfIhL2uQ--OGBYBsscy9CXk'
+            }
+        })
+            .then((res) => {
+                console.log("setCategoriesAAAOss", res.data)
+                setCategories(res.data);
+            })
+            .catch(error => console.log("error", error));
+
+        return () => {
+            setProducts([]);
+            setProductsFiltered([]);
+            setFocus();
+            setCategories([]);
+            setActive();
+            setInitialState();
+        };
+    }, []);
+
+
+    // useEffect(() => {
+    //     console.log("resresAAA", `${baseURL}`)
+
+    //     setFocus(false);
+    //     setCategories(Categories);
+    //     setActive(-1);
+
+    //     axios.get(`${baseURL}products`)
+    //         .then((res) => {
+    //             console.log("resresAAAOss", res)
+    //             setProducts(res.data)
+    //             setProductsFiltered(res.data)
+    //             setProductsCtg(res.data)
+    //             setInitialState(res.data)
+
+    //         })
+    //     return () => {
+    //         setProducts([]);
+    //         setProductsFiltered([]);
+    //         setFocus();
+    //         setCategories([]);
+    //         setActive();
+    //         setInitialState();
+    //     };
+    // }, [])
+
 
     //numColumns={2} devide screen into 2 columns
     const searchProduct = text => {
-        let filtered = Products.filter(product => product.name.toLocaleLowerCase().includes(text.toLocaleLowerCase()))
+        let filtered = products.filter(product => product.name.toLocaleLowerCase().includes(text.toLocaleLowerCase()))
         setProductsFiltered(filtered)
     }
 
@@ -32,10 +112,11 @@ const ProductContainer = props => {
     }
 
     const changeCtg = category => {
+        console.log("categoryAA",category)
         {
             category === "all"
                 ? [setProductsCtg(initialState), setActive(true)]
-                : [setProductsCtg(Products.filter(prod => prod.category.$oid === category.$oid)), setActive(true)]
+                : [setProductsCtg(products.filter(prod => prod.category._id === category)), setActive(true)]
         }
     }
 
@@ -62,7 +143,7 @@ const ProductContainer = props => {
                             </View>
                             <View>
                                 <CategoryFilter
-                                    categories={Categories}
+                                    categories={categories}
                                     categoryFilter={changeCtg}
                                     products={productsCtg}
                                     active={active}
@@ -76,7 +157,7 @@ const ProductContainer = props => {
                                             return (
                                                 <ProductList
                                                     navigation={props.navigation}
-                                                    key={item._id.$oid}
+                                                    key={item.name}
                                                     item={item}
                                                 />
                                             )
@@ -117,7 +198,7 @@ const styles = StyleSheet.create({
         backgroundColor: "gainsboro",
     },
     listContainer: {
-        height: height,
+        //height: height,
         flex: 1,
         flexDirection: "row",
         alignItems: "flex-start",
