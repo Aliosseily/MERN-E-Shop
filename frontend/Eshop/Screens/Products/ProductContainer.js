@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react'
-import { View, StyleSheet, FlatList, Dimensions, ScrollView } from 'react-native';
+import { View, StyleSheet, FlatList, Dimensions, ScrollView, ActivityIndicator } from 'react-native';
 import { Container, Header, Icon, Item, Input, Text } from 'native-base';
 import {useFocusEffect} from '@react-navigation/native'
 import baseURL from '../../assets/common/baseUrl';
@@ -44,6 +44,8 @@ const ProductContainer = props => {
                     setProductsFiltered(res.data)
                     setProductsCtg(res.data)
                     setInitialState(res.data)
+                    setLoading(false);
+
                     console.log("productsCtg", productsCtg.length)
     
                 })
@@ -58,6 +60,7 @@ const ProductContainer = props => {
                 .then((res) => {
                     console.log("setCategoriesAAAOss", res.data)
                     setCategories(res.data);
+
                 })
                 .catch(error => console.log("error", error));
              // clean up function which runs whenever this effect rerun or this component is detroyed
@@ -127,74 +130,84 @@ const ProductContainer = props => {
     }
 
     return (
-        <Container>
-            <Header searchBar rounded>
-                <Item>
-                    <Icon name="ios-search" />
-                    <Input placeholder="search"
-                        onFocus={openList}
-                        onChangeText={(text) => searchProduct(text)}
-                    />
-                    {focus === true ? (<Icon name='ios-close' onPress={onBlur} />) : null}
-                </Item>
-            </Header>
-            {focus === true ?
-                (<SearchedProduct productsFilterd={productsFiltered} navigation={props.navigation} />)
-                :
-                (
-                    <ScrollView >
-                        <View>
-                            <View>
-                                <Banner />
-                            </View>
-                            <View>
-                                <CategoryFilter
-                                    categories={categories}
-                                    categoryFilter={changeCtg}
-                                    products={productsCtg}
-                                    active={active}
-                                    setActive={setActive}
-                                />
-                            </View>
-                            {productsCtg.length > 0 ?
-                                (
-                                    <View style={styles.listContainer}>
-                                        {productsCtg.map(item => {
-                                            return (
-                                                <ProductList
-                                                    navigation={props.navigation}
-                                                    key={item.name}
-                                                    item={item}
-                                                />
-                                            )
-                                        })}
-                                    </View>
-                                ) :
-                                (
-                                    <View style={[styles.center, { height: height / 2 }]}>
-                                        <Text>No products found!</Text>
-                                    </View>
-                                )
-                            }
-                            {/* <View style={styles.listContainer}>
-                                <FlatList
-                            numColumns={2}
-                            data={Products}
-                            keyExtractor={item => item.name}
-                            renderItem={item =>
-                                <ProductList
-                                    key={item.id}
-                                    item={item.item}
-                                />
-                            }
-                        /> 
-                            </View>*/}
-                        </View>
-                    </ScrollView>
-                )
-            }
-
+        <>
+        {!loading ? (
+             <Container>
+             <Header searchBar rounded>
+                 <Item>
+                     <Icon name="ios-search" />
+                     <Input placeholder="search"
+                         onFocus={openList}
+                         onChangeText={(text) => searchProduct(text)}
+                     />
+                     {focus === true ? (<Icon name='ios-close' onPress={onBlur} />) : null}
+                 </Item>
+             </Header>
+             {focus === true ?
+                 (<SearchedProduct productsFilterd={productsFiltered} navigation={props.navigation} />)
+                 :
+                 (
+                     <ScrollView >
+                         <View>
+                             <View>
+                                 <Banner />
+                             </View>
+                             <View>
+                                 <CategoryFilter
+                                     categories={categories}
+                                     categoryFilter={changeCtg}
+                                     products={productsCtg}
+                                     active={active}
+                                     setActive={setActive}
+                                 />
+                             </View>
+                             {productsCtg.length > 0 ?
+                                 (
+                                     <View style={styles.listContainer}>
+                                         {productsCtg.map(item => {
+                                             return (
+                                                 <ProductList
+                                                     navigation={props.navigation}
+                                                     key={item.name}
+                                                     item={item}
+                                                 />
+                                             )
+                                         })}
+                                     </View>
+                                 ) :
+                                 (
+                                     <View style={[styles.center, { height: height / 2 }]}>
+                                         <Text>No products found!</Text>
+                                     </View>
+                                 )
+                             }
+                             {/* <View style={styles.listContainer}>
+                                 <FlatList
+                             numColumns={2}
+                             data={Products}
+                             keyExtractor={item => item.name}
+                             renderItem={item =>
+                                 <ProductList
+                                     key={item.id}
+                                     item={item.item}
+                                 />
+                             }
+                         /> 
+                             </View>*/}
+                         </View>
+                     </ScrollView>
+                 )
+             }
+ 
+         </Container>
+        ) : (
+            <Container style={[styles.center , {backgroundColor:"#f2f2f2"}]}>
+            <ActivityIndicator size='large' color="red" />
         </Container>
+        )
+        
+    }
+       </>
     )
 }
 
