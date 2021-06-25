@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { View, StyleSheet, FlatList, Dimensions, ScrollView } from 'react-native';
 import { Container, Header, Icon, Item, Input, Text } from 'native-base';
-
+import {useFocusEffect} from '@react-navigation/native'
 import baseURL from '../../assets/common/baseUrl';
 import axios from 'axios';
 
@@ -25,49 +25,55 @@ const ProductContainer = props => {
     const [initialState, setInitialState] = useState([]);
     const [loading, setLoading] = useState(true)
 
-    useEffect(() => {
-        console.log("RUUUUUUN", baseURL)
-        setFocus(false);
-        //setCategories(Categories);
-        setActive(-1);
-
-        axios.get(`http://7c5a135f2a1d.ngrok.io/api/v1/products`, {
-            headers: {
-                Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MDkwMDdlMzliMzhhNjNmZDRiMzk4OWQiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE2MjQ1NDI1NTIsImV4cCI6MTYyNDYyODk1Mn0.26rIH0msf_ooWFIaVOw3HfIhL2uQ--OGBYBsscy9CXk'
-            }
-        })
-            .then((res) => {
-                console.log("resresAAAOss", res.data.length)
-                setProducts(res.data)
-                setProductsFiltered(res.data)
-                setProductsCtg(res.data)
-                setInitialState(res.data)
-                console.log("productsCtg", productsCtg.length)
-
+     //useFocusEffect is a navigatiopn listener that runs every time the screen is currently focused.
+     useFocusEffect(
+         useCallback(() => { // useCallback used to fire the function if it's dependencies is changed, to avoid firing the function each time screen is focused
+            console.log("RUUUUUUN", baseURL)
+            setFocus(false);
+            //setCategories(Categories);
+            setActive(-1);
+    
+            axios.get(`http://7c5a135f2a1d.ngrok.io/api/v1/products`, {
+                headers: {
+                    Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MDkwMDdlMzliMzhhNjNmZDRiMzk4OWQiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE2MjQ1NDI1NTIsImV4cCI6MTYyNDYyODk1Mn0.26rIH0msf_ooWFIaVOw3HfIhL2uQ--OGBYBsscy9CXk'
+                }
             })
-            .catch(error => console.log("error", error));
-
-
-        axios.get(`http://7c5a135f2a1d.ngrok.io/api/v1/categories`, {
-            headers: {
-                Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MDkwMDdlMzliMzhhNjNmZDRiMzk4OWQiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE2MjQ1NDI1NTIsImV4cCI6MTYyNDYyODk1Mn0.26rIH0msf_ooWFIaVOw3HfIhL2uQ--OGBYBsscy9CXk'
-            }
-        })
-            .then((res) => {
-                console.log("setCategoriesAAAOss", res.data)
-                setCategories(res.data);
+                .then((res) => {
+                    console.log("resresAAAOss", res.data.length)
+                    setProducts(res.data)
+                    setProductsFiltered(res.data)
+                    setProductsCtg(res.data)
+                    setInitialState(res.data)
+                    console.log("productsCtg", productsCtg.length)
+    
+                })
+                .catch(error => console.log("error", error));
+    
+    
+            axios.get(`http://7c5a135f2a1d.ngrok.io/api/v1/categories`, {
+                headers: {
+                    Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MDkwMDdlMzliMzhhNjNmZDRiMzk4OWQiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE2MjQ1NDI1NTIsImV4cCI6MTYyNDYyODk1Mn0.26rIH0msf_ooWFIaVOw3HfIhL2uQ--OGBYBsscy9CXk'
+                }
             })
-            .catch(error => console.log("error", error));
+                .then((res) => {
+                    console.log("setCategoriesAAAOss", res.data)
+                    setCategories(res.data);
+                })
+                .catch(error => console.log("error", error));
+             // clean up function which runs whenever this effect rerun or this component is detroyed
+            return () => {
+                setProducts([]);
+                setProductsFiltered([]);
+                setFocus();
+                setCategories([]);
+                setActive();
+                setInitialState();
+            };
+         }, [])
+       );
 
-        return () => {
-            setProducts([]);
-            setProductsFiltered([]);
-            setFocus();
-            setCategories([]);
-            setActive();
-            setInitialState();
-        };
-    }, []);
+
+
 
 
     // useEffect(() => {
