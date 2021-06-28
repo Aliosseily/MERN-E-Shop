@@ -34,9 +34,9 @@ const ProductContainer = props => {
             setActive(-1);
     
             axios.get(`${baseURL}products`, {
-                headers: {
-                    Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MDkwMDdlMzliMzhhNjNmZDRiMzk4OWQiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE2MjQ1NDI1NTIsImV4cCI6MTYyNDYyODk1Mn0.26rIH0msf_ooWFIaVOw3HfIhL2uQ--OGBYBsscy9CXk'
-                }
+                // headers: {
+                //     Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MDkwMDdlMzliMzhhNjNmZDRiMzk4OWQiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE2MjQ1NDI1NTIsImV4cCI6MTYyNDYyODk1Mn0.26rIH0msf_ooWFIaVOw3HfIhL2uQ--OGBYBsscy9CXk'
+                // }
             })
                 .then((res) => {
                     console.log("resresAAAOss", res.data.length)
@@ -52,11 +52,7 @@ const ProductContainer = props => {
                 .catch(error => console.log("error", error));
     
     
-            axios.get(`http://7c5a135f2a1d.ngrok.io/api/v1/categories`, {
-                headers: {
-                    Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MDkwMDdlMzliMzhhNjNmZDRiMzk4OWQiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE2MjQ1NDI1NTIsImV4cCI6MTYyNDYyODk1Mn0.26rIH0msf_ooWFIaVOw3HfIhL2uQ--OGBYBsscy9CXk'
-                }
-            })
+            axios.get(`${baseURL}categories`)
                 .then((res) => {
                     console.log("setCategoriesAAAOss", res.data)
                     setCategories(res.data);
