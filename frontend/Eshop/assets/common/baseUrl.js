@@ -2,7 +2,7 @@ import { Platform } from 'react-native';
 
 // let baseURL = 'https://eshop-mern.herokuapp.com/api/v1/'
 
- let baseURL = 'https://5a1a83a36fa0.ngrok.io/api/v1/';
+ let baseURL = 'https://44e447b747df.ngrok.io/api/v1/';
 
 //  {
 //      Platform.OS === "android"
