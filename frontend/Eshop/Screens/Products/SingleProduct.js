@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Image, View, StyleSheet, Text, ScrollView, Button } from 'react-native';
 import { Left, Radio, Container, H1, Right } from 'native-base';
+import Toast from 'react-native-toast-message'; 
 
 //Redux
 import { connect } from 'react-redux';
@@ -34,8 +35,15 @@ const SingleProduct = props => {
                     <Button 
                     title="Add"  
                     onPress={() => {
-                        console.log("PROPSALI",props)
-                        props.addItemToCart(item)}}
+                        props.addItemToCart(item),
+                        Toast.show({
+                            topOffset: 60,
+                            type: "success",
+                            text1: `${item.name} added to cart`,
+                            text2: "Go to your cart to complete order"
+                        })
+                    
+                    }}
                     
                     />
                 </Right>

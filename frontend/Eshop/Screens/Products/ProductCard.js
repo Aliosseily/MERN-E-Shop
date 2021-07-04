@@ -1,6 +1,8 @@
 import React from 'react'
 import { View, Text, Button, Image, Dimensions, StyleSheet } from 'react-native';
 
+import Toast from 'react-native-toast-message'; 
+
 import { connect } from 'react-redux'; // this method allow us to connect to our store and so we can have access to the state of the store
 import * as cartActions from '../../Redux/Actions/cartActions';
 
@@ -30,9 +32,14 @@ const ProductCart = props => {
                         title='Add'
                         color='green'
                         onPress={() => {
-                            console.log("PROPSALIOss",props)
-
-                             props.addItemToCart(props) }}
+                             props.addItemToCart(props),
+                             Toast.show({
+                                topOffset: 60,
+                                type: "success",
+                                text1: `${name} added to cart`,
+                                text2: "Go to your cart to complete order"
+                            })
+                            }}
                     />
                 </View>
             ) : <Text style={{ marginTop: 20 }}>Currently Unavailable</Text>}
