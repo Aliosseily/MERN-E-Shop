@@ -2,7 +2,7 @@ import jwt_decode from 'jwt-decode';
 // used to store data in the phone storage, on the phone memory without having to refresh every time
 import AsyncStorage from '@react-native-community/async-storage';
 import Toast from 'react-native-toast-message';
-import baseURL from '../../Eshop/assets/common/baseUrl';
+import baseURL from '../../assets/common/baseUrl';
 
 export const SET_CURRENT_USER = "SET_CURRENT_USER";
 
@@ -58,7 +58,7 @@ export const logoutUser = dispatch => {
     dispatch(setCurrentUser({}))
 }
 
-export const setCurrentUser = dispatch =>{
+export const setCurrentUser = (decoded, user) =>{
     return{
         type:SET_CURRENT_USER,
         payload:decoded,
