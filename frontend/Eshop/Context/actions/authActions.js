@@ -1,5 +1,5 @@
 import jwt_decode from 'jwt-decode';
-// used to store data in the phone storage, on the phone memory without having to refresh every time
+//AsyncStorage used to store data in the phone storage, on the phone memory without having to refresh every time
 import AsyncStorage from '@react-native-community/async-storage';
 import Toast from 'react-native-toast-message';
 import baseURL from '../../assets/common/baseUrl';
@@ -7,15 +7,17 @@ import baseURL from '../../assets/common/baseUrl';
 export const SET_CURRENT_USER = "SET_CURRENT_USER";
 
 export const loginUser = (user, dispatch) => {
+    console.log("loginUser",user)
+    console.log("dispatch",dispatch)
     fetch(`${baseURL}users/login`, {
         method: "POST",
         body: JSON.stringify(user),
         headers: {
             Accept: "application/json",
-            "ContentType": "application/json"
+            "Content-Type": "application/json"
         }
     })
-        .then((res) => { res.json() })
+        .then((res) => res.json() )
         .then((data) => {
             if (data) {
                 const token = data.token;
@@ -45,11 +47,11 @@ export const getUserProfile = id => {
         body: JSON.stringify(user),
         headers: {
             Accept: "application/json",
-            "ContentType": "application/json"
+            "Content-Type": "application/json"
         }
     })
-    .then((res) => {res.json()})
-    .then((data) => {console.log(data)})
+    .then((res) => res.json())
+    .then((data) => console.log(data))
 
 }
 

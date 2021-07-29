@@ -18,9 +18,9 @@ const MyStack = () => {
             <Stack.Screen
                 name="Product Detail"
                 component={SingleProduct}
-                options={{
-                    headerShown: false // remove back button from top of the page
-                }}
+                // options={{
+                //     headerShown: false // remove back button from top of the page
+                // }}
             />
         </Stack.Navigator>
     )

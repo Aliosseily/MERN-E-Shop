@@ -13,19 +13,24 @@ import { Provider } from 'react-redux';
 // navigators
 import Main from './Navigators/Main';
 
+//Contect Api
+import Auth from './Context/store/Auth'
+
 LogBox.ignoreAllLogs(true)
 
 export default function App() {
 
   return (
-    <Provider store={store}>
-    <NavigationContainer>
-        <Header />
-        {/* <ProductContainer /> */}
-        <Main />
-        <Toast ref={(ref) => Toast.setRef(ref)} />
-    </NavigationContainer>
-    </Provider>
+    <Auth>
+      <Provider store={store}>
+        <NavigationContainer>
+          <Header />
+          {/* <ProductContainer /> */}
+          <Main />
+          <Toast ref={(ref) => Toast.setRef(ref)} />
+        </NavigationContainer>
+      </Provider>
+    </Auth>
   );
 }
 
