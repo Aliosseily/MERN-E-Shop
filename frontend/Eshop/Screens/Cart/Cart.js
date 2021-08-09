@@ -7,7 +7,9 @@ import CartItem from './CartItem'
 import { connect } from 'react-redux'; // this method allow us to connect to our store and so we can have access to the state of the store
 import * as cartAction from '../../Redux/Actions/cartActions';
 
-import {SwipeListView} from "react-native-swipe-list-view";
+import { SwipeListView } from "react-native-swipe-list-view";
+import EasyButton from '../../Shared/StyledComponents/EasyButton';
+
 
 
 
@@ -29,24 +31,24 @@ const Cart = props => {
                 <Container>
                     <H1 style={{ alignSelf: 'center' }}>Cart</H1>
                     <SwipeListView
-                    data={props.cartItems}
-                    renderItem={(data) => (
-                        <CartItem item={data}/>
-                    )}
-                    renderHiddenItem={(data) => (
-                        <View style={styles.hiddenContainer}>
-                            <TouchableOpacity style={styles.hiddenButton}>
-                                <Icon name="trash" color={"white"} size={30} onPress={() => {props.removeFromCart(data.item)}}/>
-                            </TouchableOpacity>
-                        </View>
-                    )}
-                    disableRightSwipe={true}
-                    previewOpenDelay={3000}
-                    friction={1000}
-                    tension={40}
-                    leftOpenValue={75}
-                    stopLeftSwipe={75}
-                    rightOpenValue={-75}
+                        data={props.cartItems}
+                        renderItem={(data) => (
+                            <CartItem item={data} />
+                        )}
+                        renderHiddenItem={(data) => (
+                            <View style={styles.hiddenContainer}>
+                                <TouchableOpacity style={styles.hiddenButton}>
+                                    <Icon name="trash" color={"white"} size={30} onPress={() => { props.removeFromCart(data.item) }} />
+                                </TouchableOpacity>
+                            </View>
+                        )}
+                        disableRightSwipe={true}
+                        previewOpenDelay={3000}
+                        friction={1000}
+                        tension={40}
+                        leftOpenValue={75}
+                        stopLeftSwipe={75}
+                        rightOpenValue={-75}
 
                     />
                     {/* {props.cartItems.map(data => {
@@ -59,21 +61,26 @@ const Cart = props => {
                             <Text style={styles.price}>${total}</Text>
                         </Left>
                         <Right>
-                            <Button
-                             title="Clear" 
-                             onPress={() => {
-                                 props.clearCart()
-                             }}
-                             
-                             />
+                            <EasyButton
+                                danger
+                                medium
+                                onPress={() => {
+                                    props.clearCart()
+                                }}
+                            >
+                                <Text style={{ color: 'white' }}>Clear</Text>
+                            </EasyButton>
                         </Right>
                         <Right>
-                            <Button
-                                title="Checkout"
+                            <EasyButton
+                                primary
+                                medium
                                 onPress={() => {
                                     props.navigation.navigate('Checkout')
                                 }}
-                            />
+                            >
+                                <Text style={{ color: 'white' }}>Checkout</Text>
+                            </EasyButton>
                         </Right>
                     </View>
 
@@ -122,19 +129,19 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'flex-end',
         flexDirection: 'row'
-      },
-      hiddenButton: {
+    },
+    hiddenButton: {
         backgroundColor: 'red',
         justifyContent: 'center',
         alignItems: 'flex-end',
         paddingRight: 25,
         height: 70,
         width: width / 1.2
-      }
+    }
 })
 
 const mapStateToProps = state => {
-    console.log("statestateAli",state);
+    console.log("statestateAli", state);
     const { cart } = state; //cart is the namr of combinedReducers in Store.js
     return {
         cartItems: cart
@@ -143,8 +150,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        clearCart: () => {dispatch(cartAction.clearCart())},
-        removeFromCart: (item) => {dispatch(cartAction.removeFromCart(item))}
+        clearCart: () => { dispatch(cartAction.clearCart()) },
+        removeFromCart: (item) => { dispatch(cartAction.removeFromCart(item)) }
     }
 }
 

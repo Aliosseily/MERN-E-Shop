@@ -1,10 +1,11 @@
 import React from 'react'
 import { View, Text, Button, Image, Dimensions, StyleSheet } from 'react-native';
 
-import Toast from 'react-native-toast-message'; 
+import Toast from 'react-native-toast-message';
 
 import { connect } from 'react-redux'; // this method allow us to connect to our store and so we can have access to the state of the store
 import * as cartActions from '../../Redux/Actions/cartActions';
+import EasyButton from '../../Shared/StyledComponents/EasyButton';
 
 var { width } = Dimensions.get('window');
 console.log("width", width)
@@ -28,19 +29,21 @@ const ProductCart = props => {
             </Text>
             {countInStock > 0 ? (
                 <View style={{ marginBottom: 60 }}>
-                    <Button
-                        title='Add'
-                        color='green'
+                    <EasyButton
+                    primary
+                    medium
                         onPress={() => {
-                             props.addItemToCart(props),
-                             Toast.show({
-                                topOffset: 60,
-                                type: "success",
-                                text1: `${name} added to cart`,
-                                text2: "Go to your cart to complete order"
-                            })
-                            }}
-                    />
+                            props.addItemToCart(props),
+                                Toast.show({
+                                    topOffset: 60,
+                                    type: "success",
+                                    text1: `${name} added to cart`,
+                                    text2: "Go to your cart to complete order"
+                                })
+                        }}
+                    >
+                        <Text style={{color:'white'}}>Add</Text>
+                    </EasyButton>
                 </View>
             ) : <Text style={{ marginTop: 20 }}>Currently Unavailable</Text>}
         </View>

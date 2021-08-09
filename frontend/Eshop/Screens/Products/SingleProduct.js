@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Image, View, StyleSheet, Text, ScrollView, Button } from 'react-native';
 import { Left, Radio, Container, H1, Right } from 'native-base';
-import Toast from 'react-native-toast-message'; 
+import Toast from 'react-native-toast-message';
+import EasyButton from '../../Shared/StyledComponents/EasyButton';
+import TrafficLight from '../../Shared/StyledComponents/TrafficLight';
 
 //Redux
 import { connect } from 'react-redux';
@@ -10,6 +12,27 @@ import * as cartActions from '../../Redux/Actions/cartActions';
 const SingleProduct = props => {
     const [item, setItem] = useState(props.route.params.item); // take the props from the route
     const [availability, setAvailability] = useState(null);
+    const [availabilityText, setAvailabilityText] = useState('');
+
+
+    useEffect(() => {
+        if (props.route.params.item.countInStock == 0) {
+            setAvailability(<TrafficLight unavailable></TrafficLight>);
+            setAvailabilityText("Unavailable")
+        }
+        else if (props.route.params.item.countInStock <= 5) {
+            setAvailability(<TrafficLight limited></TrafficLight>);
+            setAvailabilityText("Limited Stock")
+        }
+        else {
+            setAvailability(<TrafficLight available></TrafficLight>);
+            setAvailabilityText("Available")
+        }
+        return () => {
+            setAvailability(null);
+            setAvailabilityText('');
+        }
+    }, [])
 
     return (
         <Container style={styles.container}>
@@ -26,26 +49,36 @@ const SingleProduct = props => {
                     <H1 style={styles.contentHeader}>{item.name}</H1>
                     <Text style={styles.contentText}>{item.brand}</Text>
                 </View>
+                <View style={styles.availabilityContainer}>
+                    <View style={styles.availability}>
+                        <Text style={{marginRight:10}}>Availability: {availabilityText}</Text>
+                        {availability}
+                    </View>
+                    <Text>{item.description}</Text>
+                </View>
             </ScrollView>
             <View style={styles.bottomContainer}>
                 <Left>
                     <Text style={styles.price}>$ {item.price}</Text>
                 </Left>
                 <Right>
-                    <Button 
-                    title="Add"  
-                    onPress={() => {
-                        props.addItemToCart(item),
-                        Toast.show({
-                            topOffset: 60,
-                            type: "success",
-                            text1: `${item.name} added to cart`,
-                            text2: "Go to your cart to complete order"
-                        })
-                    
-                    }}
-                    
-                    />
+                    <EasyButton
+                        primary
+                        medium
+                        onPress={() => {
+                            props.addItemToCart(item),
+                                Toast.show({
+                                    topOffset: 60,
+                                    type: "success",
+                                    text1: `${item.name} added to cart`,
+                                    text2: "Go to your cart to complete order"
+                                })
+
+                        }}
+                    >
+                        <Text style={{ color: 'white' }}>Add</Text>
+
+                    </EasyButton>
                 </Right>
             </View>
         </Container>
@@ -53,12 +86,12 @@ const SingleProduct = props => {
 }
 
 const mapDispatchToProps = dispatch => {
-return {
-    addItemToCart :(product) =>{
-        console.log("productproductproduct", product)
-        dispatch(cartActions.addToCart({quantity:1, product}))
+    return {
+        addItemToCart: (product) => {
+            console.log("productproductproduct", product)
+            dispatch(cartActions.addToCart({ quantity: 1, product }))
+        }
     }
-}
 
 }
 
@@ -101,7 +134,15 @@ const styles = StyleSheet.create({
         fontSize: 24,
         margin: 20,
         color: 'red',
+    },
+    availabilityContainer: {
+        marginBottom: 20,
+        alignItems: 'center',
+    },
+    availability: {
+        flexDirection: 'row',
+        marginBottom: 10
     }
 })
 
-export default connect(null,mapDispatchToProps)(SingleProduct);
+export default connect(null, mapDispatchToProps)(SingleProduct);

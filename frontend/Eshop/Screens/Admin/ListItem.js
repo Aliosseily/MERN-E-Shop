@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, Text, Image, TouchableHighlight, TouchableOpacity, Button, Dimensions, Modal, TouchableOpacityBase } from 'react-native';
 import Icon from "react-native-vector-icons/FontAwesome";
-
+import EasyButton from '../../Shared/StyledComponents/EasyButton';
 var { width } = Dimensions.get("window")
 
 const ListItem = props => {
@@ -28,17 +28,20 @@ const ListItem = props => {
                         >
                             <Icon name="close" size={20} />
                         </TouchableOpacity>
-                        <Button
-                            title="Edit"
+
+                        <EasyButton
+                            medium
+                            secondary
                             onPress={() => [
-                                props.navigation.navigate("ProductForm"),
+                                props.navigation.navigate("ProductForm",{item:props}),
                                 setModalVisible(false)
                             ]}
-                        />
-                        <Button
-                            title="Delete"
-                        //Delete
-                        />
+                        >
+                            <Text style={styles.textStyle}>Edit</Text>
+                        </EasyButton>
+                        <EasyButton medium danger>
+                            <Text style={styles.textStyle}>Delete</Text>
+                        </EasyButton>
                     </View>
                 </View>
 
@@ -85,27 +88,30 @@ const styles = StyleSheet.create({
         margin: 3,
         width: width / 6
     },
-    centeredView:{
-        flex:1,
-        justifyContent:"center",
-        alignItems:'center',
-        marginTop:22
+    centeredView: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: 'center',
+        marginTop: 22
     },
-    modalView:{
-        margin:20,
-        backgroundColor:'white',
-        borderRadius:5,
-        padding:35,
-        alignItems:'center',
-        shadowColor:'#000',
-        shadowOffset:{
-            width:0,
-            height:2
+    modalView: {
+        margin: 20,
+        backgroundColor: 'white',
+        borderRadius: 5,
+        padding: 35,
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2
         },
-        shadowOpacity:0.25,
-        shadowRadius:4,
-        elevation:5
-
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5
+    },
+    textStyle: {
+        color: 'white',
+        fontWeight: 'bold'
     }
 });
 export default ListItem;
